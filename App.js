@@ -8,16 +8,26 @@ import {
   StyleSheet,
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import * as Location from 'expo-location';
 import { Fontisto } from '@expo/vector-icons';
-import axios from 'axios';
+import data from './data';
 
 const { width, height } = Dimensions.get('window');
 
 export default function App() {
   const API_KEY = 'ff26d804d0d9d838fc3e57227eed4bcc';
-  const [location, setLocation] = useState([]);
-  const [daily, setDaily] = useState([]);
+  const [location, setLocation] = useState({
+    city: 'Mountain View',
+    country: 'United States',
+    district: null,
+    isoCountryCode: 'US',
+    name: '1600',
+    postalCode: '94043',
+    region: 'California',
+    street: 'Amphitheatre Parkway',
+    subregion: 'Santa Clara County',
+    timezone: null,
+  });
+  const [daily, setDaily] = useState(data);
   const [error, setError] = useState(null);
   const weatherIcons = {
     Clear: 'day-sunny',
@@ -29,25 +39,7 @@ export default function App() {
     Thunderstorm: 'lightning',
   };
 
-  const handleGetWeather = async () => {
-    const { status } = await Location.requestForegroundPermissionsAsync();
-    if (status !== 'granted') {
-      return setError('Permission to access location was denied.');
-    } else {
-      const {
-        coords: { latitude, longitude },
-      } = await Location.getCurrentPositionAsync({ accuracy: 5 });
-      const location = await Location.reverseGeocodeAsync(
-        { latitude, longitude },
-        { useGoogleMaps: false }
-      );
-      const response = await axios.get(
-        `https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exclude=alerts&appid=${API_KEY}&units=metric`
-      );
-      setLocation(location[0]);
-      setDaily(response.data.daily);
-    }
-  };
+  const handleGetWeather = async () => {};
 
   useEffect(() => {
     handleGetWeather();
